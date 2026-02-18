@@ -1,0 +1,357 @@
+%
+% 000-session5.tex
+% Presentation Session 5: Practice 0 - Seq0 Module
+%
+% Compile to .pdf with LaTeX (pdflatex)
+% Requires Beamer package (latex-beamer)
+%
+
+\documentclass[xcolor=table]{beamer}
+\usetheme{Warsaw}
+\beamertemplatenavigationsymbolsempty
+\setbeamertemplate{headline}{}
+\useoutertheme{infolines}
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{graphics}
+\usepackage{amssymb}
+\usepackage{multirow}
+\usepackage{xcolor}
+\usepackage{framed}
+\usepackage{hyperref}
+
+\definecolor{shadecolor}{RGB}{180,180,180}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Python Highlighting
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\DeclareFixedFont{\ttb}{T1}{txtt}{bx}{n}{10}
+\DeclareFixedFont{\ttm}{T1}{txtt}{m}{n}{10}
+
+% Custom colors
+\usepackage{color}
+\definecolor{deepblue}{rgb}{0,0,0.5}
+\definecolor{deepred}{rgb}{0.6,0,0}
+\definecolor{deepgreen}{rgb}{0,0.5,0}
+\definecolor{grey1}{rgb}{0.5,0.5,0.5}
+
+\usepackage{listings}
+
+% Python style for highlighting
+\newcommand\pythonstyle{\lstset{
+language=Python,
+basicstyle=\ttm\small,
+morekeywords={self},
+keywordstyle=\ttb\color{deepblue},
+emphstyle=\ttb\color{deepred},
+stringstyle=\color{deepgreen},
+commentstyle=\small\color{grey1}\ttm,
+frame=single,
+showstringspaces=false
+}}
+
+% Python environment
+\lstnewenvironment{python}[1][]
+{
+\pythonstyle
+\lstset{#1}
+}
+{}
+
+% Python for inline
+\newcommand\pythoninline[1]{{\pythonstyle\lstinline!#1!}}
+
+\newcommand{\asignatura}{Session 5: Practice 0 -- Seq0 Module}
+\newcommand{\grado}{Programming in Network Environments}
+\newcommand{\curso}{2025-2026}
+
+\title[\asignatura]{\asignatura}
+\subtitle{\grado}
+\author{URJC}
+\institute{Universidad Rey Juan Carlos}
+\date{Course \curso}
+
+\AtBeginSection[]
+{
+\begin{frame}<beamer>
+\begin{center}
+{\Huge \insertsection}
+\end{center}
+\end{frame}
+}
+
+\begin{document}
+
+\frame{
+\maketitle
+}
+
+\begin{frame}
+\frametitle{Contents}
+\tableofcontents
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% SECTION 1: Session 4 Review
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Review: Session 4 -- Ensembl Genome Browser}
+
+\begin{frame}
+\frametitle{What We Learned in Session 4}
+
+\textbf{Session 4: The Ensembl Genome Browser}:
+
+\begin{itemize}
+\item \textbf{Ensembl database}
+  \begin{itemize}
+  \item Genome browser for vertebrate genomic information
+  \item Accessible via web browser and REST API
+  \end{itemize}
+\vspace{0.2cm}
+\item \textbf{Architecture}
+  \begin{itemize}
+  \item Database + Server on the internet
+  \item Users access via browser (web pages)
+  \item Apps access via REST API
+  \end{itemize}
+\vspace{0.2cm}
+\item \textbf{Data formats}: FASTA, JSON, XML
+\vspace{0.2cm}
+\item \textbf{Exercises}
+  \begin{itemize}
+  \item Downloaded gene sequences (RNU6\_269P, FRAT1, U5, ADA, FXN)
+  \item Used \textbf{\pythoninline{pathlib}} to read files
+  \item Extracted headers, bodies, and counted bases
+  \end{itemize}
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Session 4 Checklist}
+
+\textbf{Make sure you have}:
+
+\begin{itemize}
+\item S04 folder in your repository with:
+  \begin{itemize}
+  \item Sequence files: RNU6\_269P.txt, FRAT1.txt, U5.txt, ADA.txt, FXN.txt
+  \item print\_file.py
+  \item header.py
+  \item body.py
+  \item sequence.py
+  \end{itemize}
+\item Everything pushed to your remote Github repo
+\end{itemize}
+
+\vspace{0.3cm}
+
+\textbf{Key concepts to remember}:
+\begin{itemize}
+\item FASTA files have a \textbf{header} (first line, starts with \texttt{>})
+\item The \textbf{body} contains the nucleotide sequence
+\item Use \pythoninline{Path(filename).read_text()} to read files
+\end{itemize}
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% SECTION 2: Session 5 Overview
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Session 5: Practice 0 -- Seq0 Module}
+
+\begin{frame}
+\frametitle{Session 5 Goals}
+
+\textbf{In this session we will}:
+
+\begin{itemize}
+\item Create our first \textbf{Python module} for working with DNA sequences
+\item Learn how to \textbf{import our own modules}
+\item Learn to write programs \textbf{divided in multiple files}
+\item Install the tools on our own computer
+\end{itemize}
+
+\vspace{0.5cm}
+
+\textbf{Time}: 2 hours
+
+\end{frame}
+
+\begin{frame}
+\frametitle{What is the Seq0 Module?}
+
+\begin{block}{Seq0.py}
+A \textbf{library of functions} for working with DNA sequences, stored in the file \texttt{Seq0.py} inside the \texttt{P00/} folder.
+\end{block}
+
+\vspace{0.3cm}
+
+\textbf{Functions to implement}:
+
+\vspace{0.2cm}
+
+\begin{center}
+\begin{tabular}{|l|l|}
+\hline
+\textbf{Function} & \textbf{Description} \\
+\hline
+\pythoninline{seq_ping()} & Test function, prints ``OK'' \\
+\hline
+\pythoninline{seq_read_fasta(filename)} & Read FASTA file, return sequence \\
+\hline
+\pythoninline{seq_len(seq)} & Total number of bases \\
+\hline
+\pythoninline{seq_count_base(seq, base)} & Count a specific base \\
+\hline
+\pythoninline{seq_count(seq)} & Count all bases (returns dict) \\
+\hline
+\pythoninline{seq_reverse(seq)} & Reverse of the sequence \\
+\hline
+\pythoninline{seq_complement(seq)} & Complement sequence \\
+\hline
+\end{tabular}
+\end{center}
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Working with Modules: import}
+
+\textbf{Key concept}: Separate library code from main programs.
+
+\vspace{0.3cm}
+
+\begin{itemize}
+\item All functions go into \texttt{P00/Seq0.py}
+\item Main programs (e1.py, e2.py, ...) \textbf{import} the module
+\end{itemize}
+
+\vspace{0.3cm}
+
+\begin{python}
+from Seq0 import *
+\end{python}
+
+\vspace{0.3cm}
+
+\textbf{PyCharm setup}:
+\begin{itemize}
+\item Right-click on the \texttt{P00} folder
+\item Select \textbf{Mark directory as $\rightarrow$ Sources Root}
+\item This tells PyCharm where to resolve imports
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Exercises Overview (1/2)}
+
+\textbf{Exercise 1}: \pythoninline{seq_ping()} -- Test function
+\begin{itemize}
+\item Just prints ``OK'' on the console
+\end{itemize}
+
+\vspace{0.2cm}
+
+\textbf{Exercise 2}: \pythoninline{seq_read_fasta(filename)} -- Read FASTA
+\begin{itemize}
+\item Opens a FASTA file, removes header and \pythoninline{'\\n'}
+\item Returns only the DNA sequence as a string
+\end{itemize}
+
+\vspace{0.2cm}
+
+\textbf{Exercise 3}: \pythoninline{seq_len(seq)} -- Sequence length
+\begin{itemize}
+\item Calculate the total length of 4 genes: U5, ADA, FRAT1, FXN
+\end{itemize}
+
+\vspace{0.2cm}
+
+\textbf{Exercise 4}: \pythoninline{seq_count_base(seq, base)} -- Count one base
+\begin{itemize}
+\item Count occurrences of A, C, T, G in each gene
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Exercises Overview (2/2)}
+
+\textbf{Exercise 5}: \pythoninline{seq_count(seq)} -- Count all bases
+\begin{itemize}
+\item Returns a \textbf{dictionary}: \pythoninline{\{'A':n, 'T':n, 'C':n, 'G':n\}}
+\end{itemize}
+
+\vspace{0.2cm}
+
+\textbf{Exercise 6}: \pythoninline{seq_reverse(seq)} -- Reverse sequence
+\begin{itemize}
+\item ``ATTCG'' $\rightarrow$ ``GCTTA''
+\item Hint: use Python slicing with \pythoninline{[::-1]}
+\end{itemize}
+
+\vspace{0.2cm}
+
+\textbf{Exercise 7}: \pythoninline{seq_complement(seq)} -- Complement
+\begin{itemize}
+\item A $\leftrightarrow$ T, C $\leftrightarrow$ G
+\item ``ATTCG'' $\rightarrow$ ``TAAGC''
+\item Hint: use a dictionary for base mapping
+\end{itemize}
+
+\vspace{0.2cm}
+
+\textbf{Exercise 8}: Most frequent base
+\begin{itemize}
+\item Which base appears most in each gene?
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Deliverables}
+
+\textbf{P00 folder should contain}:
+
+\begin{itemize}
+\item \textbf{Seq0.py} -- The module with all functions
+\item \textbf{e1.py} through \textbf{e8.py} -- One program per exercise
+\end{itemize}
+
+\vspace{0.5cm}
+
+\textbf{Remember}:
+\begin{itemize}
+\item Push everything to your remote Github repository
+\item Make sure all exercises produce the expected output
+\end{itemize}
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% SECTION 3: End
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Let's start!}
+
+\begin{frame}
+\begin{center}
+\Huge{Questions?}
+
+\vspace{1cm}
+
+\Large{Time to code!}
+\end{center}
+\end{frame}
+
+\end{document}
