@@ -1,0 +1,342 @@
+%
+% 000-session7.tex
+% Presentation Session 7: Practice 1 - Seq1 Module (OOP)
+%
+% Compile to .pdf with LaTeX (pdflatex)
+% Requires Beamer package (latex-beamer)
+%
+
+\documentclass[xcolor=table]{beamer}
+\usetheme{Warsaw}
+\beamertemplatenavigationsymbolsempty
+\setbeamertemplate{headline}{}
+\useoutertheme{infolines}
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{graphics}
+\usepackage{amssymb}
+\usepackage{multirow}
+\usepackage{xcolor}
+\usepackage{framed}
+\usepackage{hyperref}
+
+\definecolor{shadecolor}{RGB}{180,180,180}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Python Highlighting
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\DeclareFixedFont{\ttb}{T1}{txtt}{bx}{n}{10}
+\DeclareFixedFont{\ttm}{T1}{txtt}{m}{n}{10}
+
+% Custom colors
+\usepackage{color}
+\definecolor{deepblue}{rgb}{0,0,0.5}
+\definecolor{deepred}{rgb}{0.6,0,0}
+\definecolor{deepgreen}{rgb}{0,0.5,0}
+\definecolor{grey1}{rgb}{0.5,0.5,0.5}
+
+\usepackage{listings}
+
+% Python style for highlighting
+\newcommand\pythonstyle{\lstset{
+language=Python,
+basicstyle=\ttm\small,
+morekeywords={self},
+keywordstyle=\ttb\color{deepblue},
+emphstyle=\ttb\color{deepred},
+stringstyle=\color{deepgreen},
+commentstyle=\small\color{grey1}\ttm,
+frame=single,
+showstringspaces=false
+}}
+
+% Python environment
+\lstnewenvironment{python}[1][]
+{
+\pythonstyle
+\lstset{#1}
+}
+{}
+
+% Python for inline
+\newcommand\pythoninline[1]{{\pythonstyle\lstinline!#1!}}
+
+\newcommand{\asignatura}{Session 7: Practice 1 -- Seq1 Module}
+\newcommand{\grado}{Programming in Network Environments}
+\newcommand{\curso}{2025-2026}
+
+\title[\asignatura]{\asignatura}
+\subtitle{\grado}
+\author{URJC}
+\institute{Universidad Rey Juan Carlos}
+\date{Course \curso}
+
+\AtBeginSection[]
+{
+\begin{frame}<beamer>
+\begin{center}
+{\Huge \insertsection}
+\end{center}
+\end{frame}
+}
+
+\begin{document}
+
+\frame{
+\maketitle
+}
+
+\begin{frame}
+\frametitle{Contents}
+\tableofcontents
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% SECTION 1: Session 6 Review
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Review: Session 6 -- Object Oriented Programming}
+
+\begin{frame}
+\frametitle{What We Learned in Session 6}
+
+\textbf{Session 6: Object Oriented Programming}:
+
+\begin{itemize}
+\item \textbf{From functions to objects}
+  \begin{itemize}
+  \item Procedural: data and functions are \textbf{separated}
+  \item OOP: data (\textbf{attributes}) and functions (\textbf{methods}) grouped in \textbf{objects}
+  \end{itemize}
+\vspace{0.15cm}
+\item \textbf{Classes}: templates for creating objects
+  \begin{itemize}
+  \item \pythoninline{__init__(self, strbases)}: initialization method
+  \item \pythoninline{__str__(self)}: controls how object is printed
+  \item \pythoninline{len(self)}: custom method example
+  \end{itemize}
+\vspace{0.15cm}
+\item \textbf{Inheritance}: \pythoninline{class Gene(Seq)}
+  \begin{itemize}
+  \item Child class inherits methods from parent
+  \item Can add new methods or \textbf{override} existing ones
+  \item Use \pythoninline{super().__init__()} to call parent constructor
+  \end{itemize}
+\vspace{0.15cm}
+\item \textbf{termcolor}: installed an external library for colored output
+\end{itemize}
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% SECTION 2: Session 7 Overview
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Session 7: Practice 1 -- Seq1 Module}
+
+\begin{frame}
+\frametitle{Session 7 Goals}
+
+\textbf{In this session we will}:
+
+\begin{itemize}
+\item Create the \textbf{Seq Class} in a module called \textbf{Seq1.py}
+\item Apply \textbf{Object Oriented Programming} to DNA sequences
+\item Similar to Seq0 (Practice 0) but using an \textbf{OOP approach}
+\item Handle three types of sequences: \textbf{Null}, \textbf{Valid}, \textbf{Invalid}
+\end{itemize}
+
+\vspace{0.5cm}
+
+\textbf{Time}: 2 hours
+
+\vspace{0.3cm}
+
+\textbf{Important}: Finish all previous practices before starting!
+
+\end{frame}
+
+\begin{frame}
+\frametitle{The Seq Class: Methods Overview}
+
+\begin{center}
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{Method} & \textbf{Parameters} & \textbf{Description} \\
+\hline
+\pythoninline{len()} & None & Total number of bases \\
+\hline
+\pythoninline{count_base(base)} & base: char & Count of a given base \\
+\hline
+\pythoninline{count()} & None & Dict with all base counts \\
+\hline
+\pythoninline{reverse()} & None & Reverse sequence \\
+\hline
+\pythoninline{complement()} & None & Complement sequence \\
+\hline
+\pythoninline{read_fasta(file)} & filename: str & Read FASTA into object \\
+\hline
+\end{tabular}
+\end{center}
+
+\vspace{0.3cm}
+
+\textbf{Special methods} (already known from S6):
+\begin{itemize}
+\item \pythoninline{__init__(self, strbases=None)}: initialize the object
+\item \pythoninline{__str__(self)}: print the object as a sequence
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Three Types of Sequences (Ex. 1--3)}
+
+The Seq class must handle \textbf{three types} of sequences:
+
+\vspace{0.3cm}
+
+\begin{itemize}
+\item \textbf{Null}: created with no arguments -- \pythoninline{Seq()}
+  \begin{itemize}
+  \item Prints: ``NULL sequence created''
+  \item Uses \textbf{optional parameter}: \pythoninline{def __init__(self, strbases=None)}
+  \end{itemize}
+\vspace{0.2cm}
+\item \textbf{Valid}: only contains A, T, C, G -- \pythoninline{Seq("ACTGA")}
+  \begin{itemize}
+  \item Prints: ``New sequence created!''
+  \end{itemize}
+\vspace{0.2cm}
+\item \textbf{Invalid}: contains other characters -- \pythoninline{Seq("Invalid")}
+  \begin{itemize}
+  \item Prints: ``INVALID sequence!''
+  \item Stored as ``ERROR''
+  \end{itemize}
+\end{itemize}
+
+\vspace{0.3cm}
+
+\textbf{Exercises 1--3}: Create the Seq1 module, import it, and test the three sequence types.
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Methods: len, count\_base, count (Ex. 4--6)}
+
+\textbf{Exercise 4}: \pythoninline{len(self)}
+\begin{itemize}
+\item Returns total number of bases
+\item Null or Invalid sequences $\rightarrow$ length is \textbf{0}
+\end{itemize}
+
+\vspace{0.2cm}
+
+\textbf{Exercise 5}: \pythoninline{count_base(self, base)}
+\begin{itemize}
+\item Returns count of a specific base (A, C, T, or G)
+\item Null or Invalid sequences $\rightarrow$ returns \textbf{0}
+\end{itemize}
+
+\vspace{0.2cm}
+
+\textbf{Exercise 6}: \pythoninline{count(self)}
+\begin{itemize}
+\item Returns a \textbf{dictionary} with all base counts
+\item Example: \pythoninline{\{'A': 2, 'T': 1, 'C': 1, 'G': 1\}}
+\item Null or Invalid $\rightarrow$ all values are \textbf{0}
+\end{itemize}
+
+\vspace{0.3cm}
+
+\textbf{Pattern}: Always check sequence type first -- return 0 or empty result for Null/Invalid.
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Methods: reverse, complement, read\_fasta (Ex. 7--9)}
+
+\textbf{Exercise 7}: \pythoninline{reverse(self)}
+\begin{itemize}
+\item Returns the reversed sequence string
+\item ``ACTGA'' $\rightarrow$ ``AGTCA''
+\item Null/Invalid $\rightarrow$ returns ``NULL'' or ``ERROR''
+\end{itemize}
+
+\vspace{0.2cm}
+
+\textbf{Exercise 8}: \pythoninline{complement(self)}
+\begin{itemize}
+\item A $\leftrightarrow$ T, C $\leftrightarrow$ G
+\item ``ACTGA'' $\rightarrow$ ``TGACT''
+\item Null/Invalid $\rightarrow$ returns ``NULL'' or ``ERROR''
+\end{itemize}
+
+\vspace{0.2cm}
+
+\textbf{Exercise 9}: \pythoninline{read_fasta(self, filename)}
+\begin{itemize}
+\item Creates a \textbf{Null} sequence first, then reads from file
+\item Populates the object with the FASTA sequence
+\end{itemize}
+
+\begin{python}
+s = Seq()                # Create Null sequence
+s.read_fasta(FILENAME)   # Load from file
+\end{python}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Exercise 10 and Deliverables}
+
+\textbf{Exercise 10}: Processing the genes
+\begin{itemize}
+\item Find the \textbf{most frequent base} in each gene
+\item Same as Practice 0 Ex. 8 but using \textbf{Seq Class}
+\item Genes: U5, ADA, FRAT1, FXN, RNU6\_269P
+\end{itemize}
+
+\vspace{0.5cm}
+
+\textbf{P01 folder should contain}:
+
+\begin{itemize}
+\item \textbf{Seq1.py} -- The module with the Seq Class
+\item \textbf{e1.py} through \textbf{e10.py} -- One program per exercise
+\end{itemize}
+
+\vspace{0.3cm}
+
+\textbf{Remember}:
+\begin{itemize}
+\item Push everything to your remote Github repository
+\item Make sure all exercises produce the expected output
+\item Check all items in the session checklist
+\end{itemize}
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% SECTION 3: End
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Let's start!}
+
+\begin{frame}
+\begin{center}
+\Huge{Questions?}
+
+\vspace{1cm}
+
+\Large{Time to code!}
+\end{center}
+\end{frame}
+
+\end{document}
