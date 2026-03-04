@@ -158,6 +158,56 @@ s.close()
 
 \end{frame}
 
+\begin{frame}[fragile]
+\frametitle{Socket Lifecycle: Server vs Client}
+
+\begingroup\small
+\begin{columns}[T]
+
+\begin{column}{0.45\textwidth}
+\begin{center}
+\textbf{SERVER}
+\end{center}
+
+\vspace{0.1cm}
+
+\begin{enumerate}
+\item \texttt{socket()} -- Create socket
+\item \texttt{bind(IP, PORT)} -- Assign address
+\item \texttt{listen()} -- Start listening
+\item \texttt{accept()} -- Wait for client \\ {\scriptsize (blocks until connection)}
+\item \texttt{recv()} -- Read client message
+\item \texttt{send()} -- Send response
+\item \texttt{close()} -- Close connection
+\item Go to step 4 (loop)
+\end{enumerate}
+\end{column}
+
+\begin{column}{0.45\textwidth}
+\begin{center}
+\textbf{CLIENT}
+\end{center}
+
+\vspace{0.1cm}
+
+\begin{enumerate}
+\item \texttt{socket()} -- Create socket
+\item \texttt{connect(IP, PORT)} -- Connect to server
+\item \texttt{send()} -- Send message
+\item \texttt{recv()} -- Receive response
+\item \texttt{close()} -- Close socket
+\end{enumerate}
+
+\vspace{0.3cm}
+
+{\scriptsize The client does \textbf{not} need \texttt{bind()}, \texttt{listen()}, or \texttt{accept()} -- those are server-only operations.}
+\end{column}
+
+\end{columns}
+\endgroup
+
+\end{frame}
+
 \begin{frame}
 \frametitle{Session 8 Checklist}
 
