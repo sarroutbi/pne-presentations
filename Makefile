@@ -1,7 +1,7 @@
-SUBDIRS=session2
-SUBDIRS+=session5
-SUBDIRS+=session7
-SUBDIRS+=session9
+SUBDIRS=session02
+SUBDIRS+=session05
+SUBDIRS+=session07
+SUBDIRS+=session09
 SUBDIRS+=session11
 SUBDIRS+=session13
 
