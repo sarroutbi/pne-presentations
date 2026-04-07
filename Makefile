@@ -1,7 +1,7 @@
-SUBDIRS=session2
-SUBDIRS+=session5
-SUBDIRS+=session7
-SUBDIRS+=session9
+SUBDIRS=session02
+SUBDIRS+=session05
+SUBDIRS+=session07
+SUBDIRS+=session09
 SUBDIRS+=session11
 SUBDIRS+=session13
 SUBDIRS+=session15
@@ -9,23 +9,23 @@ SUBDIRS+=session15
 .PHONY: all
 all:
 	@for dir in $(SUBDIRS); do \
-		make -C $$dir; \
+		make -C $$dir || exit 1 ;\
 	done
 
 .PHONY: clean
 clean:
 	@for dir in $(SUBDIRS); do \
-		make -C $$dir clean; \
+		make -C $$dir clean || exit 1 ;\
 	done
 
 .PHONY: clobber
 clobber:
 	@for dir in $(SUBDIRS); do \
-		make -C $$dir clobber; \
+		make -C $$dir clobber || exit 1 ;\
 	done
 
 .PHONY: test
 test:
 	@for dir in $(SUBDIRS); do \
-		make -C $$dir test; \
+		make -C $$dir test || exit 1 ;\
 	done
