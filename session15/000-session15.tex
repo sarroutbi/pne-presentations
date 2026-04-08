@@ -302,37 +302,17 @@ class Bases2Handler(
         http.server.BaseHTTPRequestHandler):
 
     def do_GET(self):
-        # 1. Read self.path
-        # 2. Open the corresponding HTML file
-        # 3. Send response with send_response(),
-        #    send_header(), end_headers()
-        # 4. Write body with self.wfile.write()
+        # 1. Map "/" to "/index.html"
+        #    Otherwise: "html" + self.path
+        # 2. Open the file (Path.read_text())
+        #    If FileNotFoundError: use error.html
+        # 3. Send response (status, headers, body)
         pass
 
 Handler = Bases2Handler
 with socketserver.TCPServer(("", PORT), Handler) \
         as httpd:
     httpd.serve_forever()
-\end{python}
-
-\end{frame}
-
-\begin{frame}[fragile]
-\frametitle{Handling the Path and Serving Files}
-
-Use \pythoninline{self.path} to determine which file to serve:
-
-\vspace{0.1cm}
-
-\begin{python}
-def do_GET(self):
-    # 1. Map "/" to "/index.html"
-    #    Otherwise build path: "html" + self.path
-
-    # 2. Try to open the file (Path.read_text())
-    #    If FileNotFoundError: use error.html
-
-    # 3. Send response (status, headers, body)
 \end{python}
 
 \end{frame}
