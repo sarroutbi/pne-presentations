@@ -158,12 +158,12 @@ $\Rightarrow$ \textbf{HTML Forms} allow clients to \textbf{submit data} to web s
   box/.style={draw, rounded corners, minimum width=2.5cm, minimum height=1cm, align=center},
   >=Stealth
 ]
-\node[box] (browser) at (0,0) {Browser\\(Client)};
-\node[box] (server) at (8,0) {Web\\Server};
+\node[box, minimum height=1.2cm] (browser) at (0,0) {Browser\\(Client)};
+\node[box, minimum height=1.2cm] (server) at (9,0) {Web\\Server};
 
-\draw[->, thick] (browser.north east) -- node[above, font=\small] {1. GET / HTTP/1.1} (server.north west);
-\draw[<-, thick] (browser.east) -- node[below, font=\small] {2. Response: form HTML} (server.west);
-\draw[->, thick] (browser.south east) -- node[below, font=\small] {3. GET /echo?msg=Hello HTTP/1.1} (server.south west);
+\draw[->, thick] ([yshift=20pt]browser.east) -- node[above, font=\small\ttfamily] {1. GET / HTTP/1.1} ([yshift=20pt]server.west);
+\draw[<-, thick] (browser.east) -- node[above, font=\small\ttfamily] {2. HTML (form)} (server.west);
+\draw[->, thick] ([yshift=-20pt]browser.east) -- node[above, font=\small\ttfamily] {3. GET /echo?msg=Hello HTTP/1.1} ([yshift=-20pt]server.west);
 \end{tikzpicture}
 \end{center}
 
