@@ -6,6 +6,7 @@ SUBDIRS+=session11
 SUBDIRS+=session13
 SUBDIRS+=session15
 SUBDIRS+=session16
+SUBDIRS+=session17
 
 .PHONY: all
 all:

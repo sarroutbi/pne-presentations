@@ -1,0 +1,494 @@
+%
+% 000-session17.tex
+% Presentation Session 17: Practice 6 -- Seq2 Server (HTTP Forms)
+%
+% Compile to .pdf with LaTeX (pdflatex)
+% Requires Beamer package (latex-beamer)
+%
+
+\documentclass[xcolor=table]{beamer}
+\usetheme{Warsaw}
+\beamertemplatenavigationsymbolsempty
+\setbeamertemplate{headline}{}
+\setbeamerfont{title}{size=\large}
+\useoutertheme{infolines}
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{graphics}
+\usepackage{amssymb}
+\usepackage{multirow}
+\usepackage{xcolor}
+\usepackage{framed}
+\usepackage{hyperref}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, positioning}
+
+\definecolor{shadecolor}{RGB}{180,180,180}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Python Highlighting
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\DeclareFixedFont{\ttb}{T1}{txtt}{bx}{n}{10}
+\DeclareFixedFont{\ttm}{T1}{txtt}{m}{n}{10}
+
+% Custom colors
+\usepackage{color}
+\definecolor{deepblue}{rgb}{0,0,0.5}
+\definecolor{deepred}{rgb}{0.6,0,0}
+\definecolor{deepgreen}{rgb}{0,0.5,0}
+\definecolor{grey1}{rgb}{0.5,0.5,0.5}
+
+\usepackage{listings}
+
+% Python style for highlighting
+\newcommand\pythonstyle{\lstset{
+language=Python,
+basicstyle=\ttm\small,
+morekeywords={self},
+keywordstyle=\ttb\color{deepblue},
+emphstyle=\ttb\color{deepred},
+stringstyle=\color{deepgreen},
+commentstyle=\small\color{grey1}\ttm,
+frame=single,
+showstringspaces=false
+}}
+
+% HTML style for highlighting
+\newcommand\htmlstyle{\lstset{
+language=HTML,
+basicstyle=\ttm\small,
+keywordstyle=\ttb\color{deepblue},
+stringstyle=\color{deepgreen},
+commentstyle=\small\color{grey1}\ttm,
+frame=single,
+showstringspaces=false
+}}
+
+% Python environment
+\lstnewenvironment{python}[1][]
+{
+\pythonstyle
+\lstset{#1}
+}
+{}
+
+% HTML environment
+\lstnewenvironment{htmlcode}[1][]
+{
+\htmlstyle
+\lstset{#1}
+}
+{}
+
+% Python for inline
+\newcommand\pythoninline[1]{{\pythonstyle\lstinline!#1!}}
+
+% HTML for inline
+\newcommand\htmlinline[1]{{\htmlstyle\lstinline!#1!}}
+
+\newcommand{\asignatura}{Session 17: Practice 6 -- Seq2 Server}
+\newcommand{\grado}{Programming in Network Environments}
+\newcommand{\curso}{2025-2026}
+
+\title[\asignatura]{\asignatura}
+\subtitle{\grado}
+\author{URJC}
+\institute{GSyC}
+\date{Course \curso}
+
+\AtBeginSection[]
+{
+\begin{frame}<beamer>
+\begin{center}
+{\LARGE \insertsection}
+\end{center}
+\end{frame}
+}
+
+\begin{document}
+
+\frame{
+\maketitle
+}
+
+\begin{frame}
+\frametitle{Contents}
+\tableofcontents
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% SECTION 1: Session 16 Review
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Review: Session 16 -- HTML Forms}
+
+\begin{frame}[fragile]
+\frametitle{What We Learned in Session 16 (1/2)}
+
+\textbf{HTML Forms}: allow clients to \textbf{send data} to web servers.
+
+\begin{itemize}
+\item \textbf{Form structure}: \htmlinline{<form action="..." method="get">}
+  \begin{itemize}
+  \item \texttt{action}: the server \textbf{endpoint} to send data to
+  \item \texttt{method}: HTTP method (\textbf{GET} puts data in the URL)
+  \end{itemize}
+\vspace{0.15cm}
+\item \textbf{Input types}: text, checkbox, radio, dropdown (select)
+\vspace{0.15cm}
+\item \textbf{Query string}: data is appended to the URL after \texttt{?}
+  \begin{itemize}
+  \item \texttt{/echo?msg=Hello\&chk=on} -- key=value pairs separated by \texttt{\&}
+  \end{itemize}
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{What We Learned in Session 16 (2/2)}
+
+\textbf{Parsing form data} on the server side:
+
+\vspace{0.1cm}
+
+\begin{python}
+from urllib.parse import parse_qs, urlparse
+
+# Inside do_GET():
+url_path = urlparse(self.path)
+path = url_path.path       # "/echo"
+arguments = parse_qs(url_path.query)
+# {"msg": ["Hello"]}
+\end{python}
+
+\vspace{0.2cm}
+
+\textbf{Dynamic HTML} with \pythoninline{jinja2}:
+
+\begin{itemize}
+\item \pythoninline{j.Template(contents).render(context=\{...\})}
+\item In HTML: \texttt{\{\{context.todisplay\}\}} for dynamic values
+\end{itemize}
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% SECTION 2: Session 17 -- Practice 6
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Session 17: Practice 6 -- Seq2 Server}
+
+\begin{frame}
+\frametitle{Session 17 Goals}
+
+\textbf{In this session we will}:
+
+\begin{itemize}
+\item Develop a second version of the \textbf{Seq server} from Practice 3
+\item Use the \textbf{HTTP Python module} instead of raw sockets
+\item Access services through \textbf{HTML forms}
+\item Implement 4 services: \textbf{PING}, \textbf{GET}, \textbf{GENE}, \textbf{OPERATION}
+\end{itemize}
+
+\vspace{0.4cm}
+
+\textbf{Time}: 2 hours
+
+\vspace{0.2cm}
+
+\textbf{Folder}: \texttt{P06/} with subfolder \texttt{html/}
+
+\vspace{0.2cm}
+
+\textbf{Important}: Finish all S16 exercises before starting!
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Services Overview}
+
+\begingroup\small
+\begin{center}
+\begin{tabular}{|l|l|l|p{3cm}|}
+\hline
+\textbf{Service} & \textbf{Action} & \textbf{Argument} & \textbf{Description} \\
+\hline
+PING & \texttt{ping} & none & Test if server is alive \\
+\hline
+GET & \texttt{get} & \texttt{n}: 0--4 & Get sequence number n \\
+\hline
+GENE & \texttt{gene} & \texttt{name} & Get complete gene sequence \\
+\hline
+OPERATION & \texttt{operation} & \texttt{seq}, \texttt{op} & Perform operation on sequence \\
+\hline
+\end{tabular}
+\end{center}
+\endgroup
+
+\vspace{0.2cm}
+
+\textbf{Valid gene names}: U5, ADA, FRAT1, FXN, RNU6\_269P
+
+\vspace{0.2cm}
+
+\textbf{Valid operations}: \texttt{info}, \texttt{comp} (complement), \texttt{rev} (reverse)
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% SECTION 3: Exercise 1 -- PING
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Exercise 1: PING}
+
+\begin{frame}[fragile]
+\frametitle{Exercise 1: PING Service}
+
+\textbf{Implement the PING service} in the server.
+
+\vspace{0.2cm}
+
+\begin{itemize}
+\item Request \texttt{/} $\rightarrow$ return the \textbf{main page} (\texttt{index.html}) with forms
+\item Form submits to \texttt{/ping} $\rightarrow$ server responds with a page saying the \textbf{server is alive}
+\item Include a \textbf{link} back to the main page
+\item Any other resource $\rightarrow$ return an \textbf{error page}
+\end{itemize}
+
+\vspace{0.3cm}
+
+\textbf{Files}:
+\begin{itemize}
+\item \texttt{P06/Seq2-server.py} -- The server
+\item \texttt{P06/html/index.html} -- Main page with forms
+\item \texttt{P06/html/error.html} -- Error page
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Server Structure for Seq2}
+
+\begin{python}
+import http.server
+import socketserver
+from urllib.parse import parse_qs, urlparse
+
+PORT = 8080
+socketserver.TCPServer.allow_reuse_address = True
+
+class Seq2Handler(
+        http.server.BaseHTTPRequestHandler):
+
+    def do_GET(self):
+        url_path = urlparse(self.path)
+        path = url_path.path
+        arguments = parse_qs(url_path.query)
+
+        # HERE, PROCESS url_path AND arguments
+\end{python}
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% SECTION 4: Exercise 2 -- GET
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Exercise 2: GET}
+
+\begin{frame}
+\frametitle{Exercise 2: GET Service}
+
+\textbf{Extend the server} to implement the GET service.
+
+\vspace{0.2cm}
+
+\begin{itemize}
+\item The form sends a \textbf{sequence number} (0--4) to the server
+\item The server responds with the \textbf{requested sequence}
+\item Include a \textbf{link} back to the main page
+\end{itemize}
+
+\vspace{0.3cm}
+
+\textbf{New file}: \texttt{P06/html/get.html} -- Form for requesting a sequence
+
+\vspace{0.3cm}
+
+\textbf{Example request}:
+
+\vspace{0.1cm}
+
+\begin{center}
+\texttt{GET /get?n=2 HTTP/1.1}
+\end{center}
+
+\vspace{0.2cm}
+
+The server should have 5 predefined sequences (numbered 0 to 4) and return the one requested.
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% SECTION 5: Exercise 3 -- GENE
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Exercise 3: GENE}
+
+\begin{frame}
+\frametitle{Exercise 3: GENE Service}
+
+\textbf{Extend the server} to implement the GENE service.
+
+\vspace{0.2cm}
+
+\begin{itemize}
+\item The form sends a \textbf{gene name} to the server
+\item The server responds with the \textbf{complete sequence} of the given gene
+\item Include a \textbf{link} back to the main page
+\end{itemize}
+
+\vspace{0.3cm}
+
+\textbf{New file}: \texttt{P06/html/gene.html} -- Form for requesting a gene
+
+\vspace{0.3cm}
+
+\textbf{Valid gene names}: U5, ADA, FRAT1, FXN, RNU6\_269P
+
+\vspace{0.3cm}
+
+\textbf{Example request}:
+
+\vspace{0.1cm}
+
+\begin{center}
+\texttt{GET /gene?name=U5 HTTP/1.1}
+\end{center}
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% SECTION 6: Exercise 4 -- OPERATION
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Exercise 4: OPERATION}
+
+\begin{frame}
+\frametitle{Exercise 4: OPERATION Service}
+
+\textbf{Extend the server} to implement the OPERATION service.
+
+\vspace{0.2cm}
+
+Three operations on a given sequence:
+\begin{enumerate}
+\item \textbf{info}: Get information about the sequence (length, base counts and percentages)
+\item \textbf{comp}: Calculate the \textbf{complement}
+\item \textbf{rev}: Calculate the \textbf{reverse}
+\end{enumerate}
+
+\vspace{0.2cm}
+
+\textbf{New file}: \texttt{P06/html/operation.html} -- Form for operations
+
+\vspace{0.2cm}
+
+\textbf{Example request}:
+
+\vspace{0.1cm}
+
+\begin{center}
+\texttt{GET /operation?seq=ATAGAC\&op=info HTTP/1.1}
+\end{center}
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{INFO Response Format}
+
+The \textbf{INFO} operation should return a response like this:
+
+\vspace{0.2cm}
+
+\begin{python}[language={}]
+Sequence: ATAGACCAAACATGAGAGGCT
+Total length: 21
+A: 9 (42.9%)
+C: 4 (19.0%)
+G: 5 (23.8%)
+T: 3 (14.3%)
+\end{python}
+
+\vspace{0.2cm}
+
+\begin{itemize}
+\item Count each \textbf{base} (A, C, G, T) in the sequence
+\item Calculate the \textbf{percentage} of each base
+\item Display the \textbf{total length} of the sequence
+\end{itemize}
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% SECTION 7: Deliverables
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Deliverables}
+
+\begin{frame}
+\frametitle{Deliverables}
+
+\textbf{P06 folder should contain}:
+
+\vspace{0.2cm}
+
+\begingroup\small
+\begin{itemize}
+\item \texttt{Seq2-server.py} -- The Seq2 web server
+\item \texttt{html/index.html} -- Main page with forms for all services
+\item \texttt{html/ping.html} -- Ping response page
+\item \texttt{html/get.html} -- Get form page
+\item \texttt{html/gene.html} -- Gene form page
+\item \texttt{html/operation.html} -- Operation form page
+\item \texttt{html/error.html} -- Error page
+\end{itemize}
+\endgroup
+
+\vspace{0.3cm}
+
+\textbf{Remember}: Push everything to your remote Github repository!
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% SECTION 8: End
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}
+\begin{center}
+\Huge{Questions?}
+
+\vspace{1cm}
+
+\Large{Time to code!}
+\end{center}
+\end{frame}
+
+\end{document}
