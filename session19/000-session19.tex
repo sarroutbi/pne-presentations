@@ -118,53 +118,95 @@ showstringspaces=false
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% SECTION 1: Session 17 Review
+% SECTION 1: Session 18 Review
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Review: Session 17 -- Seq2 Server}
+\section{Review: Session 18 -- JSON and API REST}
 
 \begin{frame}[fragile]
-\frametitle{What We Learned in Session 17 (1/2)}
+\frametitle{What We Learned in Session 18 (1/3)}
 
-\textbf{Seq2 Server}: a web server using \pythoninline{http.server} with 4 services.
+\textbf{JSON format}: a standard for managing \textbf{structured data}.
 
 \begin{itemize}
-\item \textbf{PING}: test if the server is alive (\texttt{/ping})
-\vspace{0.15cm}
-\item \textbf{GET}: retrieve a sequence by number (\texttt{/get?n=2})
-\vspace{0.15cm}
-\item \textbf{GENE}: get a gene's complete sequence (\texttt{/gene?name=U5})
-\vspace{0.15cm}
-\item \textbf{OPERATION}: perform operations on a sequence (\texttt{info}, \texttt{comp}, \texttt{rev})
+\item \textbf{Objects}: defined with curly brackets \texttt{\{\}}
+\item \textbf{Arrays}: defined with brackets \texttt{[]}
+\item \textbf{Fields}: key-value pairs (\texttt{"name": "value"})
+\end{itemize}
+
+\vspace{0.2cm}
+
+\begin{python}[language={}]
+{
+    "Firstname": "Troll",
+    "Lastname": "Face",
+    "age": 20,
+    "phoneNumber": [
+      {"number": "1111", "type": "home"},
+      {"number": "333", "type": "office"}
+    ]
+}
+\end{python}
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{What We Learned in Session 18 (2/3)}
+
+\textbf{Reading JSON from Python} using the \pythoninline{json} library:
+
+\vspace{0.2cm}
+
+\begin{python}
+import json
+from pathlib import Path
+
+jsonstring = Path("people-1.json").read_text()
+person = json.loads(jsonstring)
+
+firstname = person['Firstname']
+age = person['age']
+\end{python}
+
+\vspace{0.2cm}
+
+\begin{itemize}
+\item \pythoninline{json.loads()}: converts a JSON \textbf{string} into a Python \textbf{dictionary}
+\item Access fields using \textbf{dictionary keys}
 \end{itemize}
 
 \end{frame}
 
 \begin{frame}[fragile]
-\frametitle{What We Learned in Session 17 (2/2)}
+\frametitle{What We Learned in Session 18 (3/3)}
 
-\textbf{Key concepts}:
+\textbf{API REST}: web servers can provide \textbf{objects} (not just HTML) to applications using HTTP.
 
-\begin{itemize}
-\item HTML \textbf{forms} to send data to the server
-\item Server-side \textbf{URL parsing} with \pythoninline{urlparse} and \pythoninline{parse_qs}
-\item \textbf{Dynamic HTML} generation with \pythoninline{jinja2} templates
-\item \textbf{Error handling}: return error pages for unknown resources
-\end{itemize}
+\vspace{0.2cm}
 
-\vspace{0.3cm}
+\textbf{HTTP client} with \pythoninline{http.client}:
 
-\textbf{Server structure}:
+\vspace{0.2cm}
 
 \begin{python}
-class Seq2Handler(
-        http.server.BaseHTTPRequestHandler):
-    def do_GET(self):
-        url_path = urlparse(self.path)
-        path = url_path.path
-        arguments = parse_qs(url_path.query)
+import http.client
+import json
+
+conn = http.client.HTTPConnection(SERVER, PORT)
+conn.request("GET", "/listusers")
+
+r1 = conn.getresponse()
+data = r1.read().decode("utf-8")
+person = json.loads(data)
 \end{python}
+
+\vspace{0.2cm}
+
+\begin{itemize}
+\item Server returns data in \textbf{JSON format} (\texttt{Content-Type: application/json})
+\item Client \textbf{parses} the JSON response into Python objects
+\end{itemize}
 
 \end{frame}
 
