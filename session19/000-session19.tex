@@ -1,0 +1,575 @@
+%
+% 000-session19.tex
+% Presentation Session 19: Practice 7 -- JSON REST API (Ensembl)
+%
+% Compile to .pdf with LaTeX (pdflatex)
+% Requires Beamer package (latex-beamer)
+%
+
+\documentclass[xcolor=table]{beamer}
+\usetheme{Warsaw}
+\beamertemplatenavigationsymbolsempty
+\setbeamertemplate{headline}{}
+\setbeamerfont{title}{size=\large}
+\useoutertheme{infolines}
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{graphics}
+\usepackage{amssymb}
+\usepackage{multirow}
+\usepackage{xcolor}
+\usepackage{framed}
+\usepackage{hyperref}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, positioning}
+
+\definecolor{shadecolor}{RGB}{180,180,180}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Python Highlighting
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\DeclareFixedFont{\ttb}{T1}{txtt}{bx}{n}{10}
+\DeclareFixedFont{\ttm}{T1}{txtt}{m}{n}{10}
+
+% Custom colors
+\usepackage{color}
+\definecolor{deepblue}{rgb}{0,0,0.5}
+\definecolor{deepred}{rgb}{0.6,0,0}
+\definecolor{deepgreen}{rgb}{0,0.5,0}
+\definecolor{grey1}{rgb}{0.5,0.5,0.5}
+
+\usepackage{listings}
+
+% Python style for highlighting
+\newcommand\pythonstyle{\lstset{
+language=Python,
+basicstyle=\ttm\small,
+morekeywords={self},
+keywordstyle=\ttb\color{deepblue},
+emphstyle=\ttb\color{deepred},
+stringstyle=\color{deepgreen},
+commentstyle=\small\color{grey1}\ttm,
+frame=single,
+showstringspaces=false
+}}
+
+% HTML style for highlighting
+\newcommand\htmlstyle{\lstset{
+language=HTML,
+basicstyle=\ttm\small,
+keywordstyle=\ttb\color{deepblue},
+stringstyle=\color{deepgreen},
+commentstyle=\small\color{grey1}\ttm,
+frame=single,
+showstringspaces=false
+}}
+
+% Python environment
+\lstnewenvironment{python}[1][]
+{
+\pythonstyle
+\lstset{#1}
+}
+{}
+
+% HTML environment
+\lstnewenvironment{htmlcode}[1][]
+{
+\htmlstyle
+\lstset{#1}
+}
+{}
+
+% Python for inline
+\newcommand\pythoninline[1]{{\pythonstyle\lstinline!#1!}}
+
+% HTML for inline
+\newcommand\htmlinline[1]{{\htmlstyle\lstinline!#1!}}
+
+\newcommand{\asignatura}{Session 19: Practice 7 -- JSON REST API}
+\newcommand{\grado}{Programming in Network Environments}
+\newcommand{\curso}{2025-2026}
+
+\title[\asignatura]{\asignatura}
+\subtitle{\grado}
+\author{URJC}
+\institute{GSyC}
+\date{Course \curso}
+
+\AtBeginSection[]
+{
+\begin{frame}<beamer>
+\begin{center}
+{\LARGE \insertsection}
+\end{center}
+\end{frame}
+}
+
+\begin{document}
+
+\frame{
+\maketitle
+}
+
+\begin{frame}
+\frametitle{Contents}
+\tableofcontents
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% SECTION 1: Session 17 Review
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Review: Session 17 -- Seq2 Server}
+
+\begin{frame}[fragile]
+\frametitle{What We Learned in Session 17 (1/2)}
+
+\textbf{Seq2 Server}: a web server using \pythoninline{http.server} with 4 services.
+
+\begin{itemize}
+\item \textbf{PING}: test if the server is alive (\texttt{/ping})
+\vspace{0.15cm}
+\item \textbf{GET}: retrieve a sequence by number (\texttt{/get?n=2})
+\vspace{0.15cm}
+\item \textbf{GENE}: get a gene's complete sequence (\texttt{/gene?name=U5})
+\vspace{0.15cm}
+\item \textbf{OPERATION}: perform operations on a sequence (\texttt{info}, \texttt{comp}, \texttt{rev})
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{What We Learned in Session 17 (2/2)}
+
+\textbf{Key concepts}:
+
+\begin{itemize}
+\item HTML \textbf{forms} to send data to the server
+\item Server-side \textbf{URL parsing} with \pythoninline{urlparse} and \pythoninline{parse_qs}
+\item \textbf{Dynamic HTML} generation with \pythoninline{jinja2} templates
+\item \textbf{Error handling}: return error pages for unknown resources
+\end{itemize}
+
+\vspace{0.3cm}
+
+\textbf{Server structure}:
+
+\begin{python}
+class Seq2Handler(
+        http.server.BaseHTTPRequestHandler):
+    def do_GET(self):
+        url_path = urlparse(self.path)
+        path = url_path.path
+        arguments = parse_qs(url_path.query)
+\end{python}
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% SECTION 2: Session 19 -- Practice 7
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Session 19: Practice 7 -- JSON REST API}
+
+\begin{frame}
+\frametitle{Session 19 Goals}
+
+\textbf{In this session we will}:
+
+\begin{itemize}
+\item Practice with \textbf{JSON} and the \textbf{API REST}
+\item Read information from the \textbf{Ensembl project} database
+\item Develop a \textbf{python client} that connects to a remote REST API
+\item Perform \textbf{calculations} on gene sequences retrieved from Ensembl
+\end{itemize}
+
+\vspace{0.4cm}
+
+\textbf{Time}: 2 hours
+
+\vspace{0.2cm}
+
+\textbf{Folder}: \texttt{P07/}
+
+\vspace{0.2cm}
+
+\textbf{Important}: Finish all S18 exercises before starting!
+
+\end{frame}
+
+\begin{frame}
+\frametitle{The Ensembl Database}
+
+The \href{http://www.ensembl.org/index.html}{\textbf{Ensembl}} database can be accessed in \textbf{two ways}:
+
+\vspace{0.3cm}
+
+\begin{enumerate}
+\item \textbf{Browser}: write the URL in the address bar $\rightarrow$ web page for \textbf{humans}
+\vspace{0.2cm}
+\item \textbf{API REST}: applications get objects directly from the server $\rightarrow$ interface for \textbf{programs}
+\end{enumerate}
+
+\vspace{0.3cm}
+
+The API REST documentation:
+\begin{center}
+\url{https://rest.ensembl.org/}
+\end{center}
+
+\vspace{0.2cm}
+
+Resources are accessed through \textbf{endpoints} (named paths).
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Genes to Analyze}
+
+The application should read \textbf{10 genes} and perform calculations on them:
+
+\vspace{0.3cm}
+
+\begingroup\small
+\begin{center}
+\begin{tabular}{|l|l|}
+\hline
+\textbf{Gene} & \textbf{Gene} \\
+\hline
+FRAT1 & TTTY4C \\
+\hline
+ADA & RBMY2YP \\
+\hline
+FXN & FGFR3 \\
+\hline
+RNU6\_269P & KDR \\
+\hline
+MIR633 & ANK2 \\
+\hline
+\end{tabular}
+\end{center}
+\endgroup
+
+\vspace{0.3cm}
+
+\textbf{Calculations}: total bases, count of each base, percentage, most frequent base.
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% SECTION 3: Exercise 1 -- PING
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Exercise 1: PING}
+
+\begin{frame}
+\frametitle{Exercise 1: PING the Ensembl Server}
+
+\textbf{File}: \texttt{P07/e1.py}
+
+\vspace{0.3cm}
+
+\textbf{Goal}: check whether the Ensembl service is \textbf{alive} using the \texttt{info/ping} endpoint.
+
+\vspace{0.3cm}
+
+\textbf{Endpoint URL}:
+\begin{center}
+\small\texttt{https://rest.ensembl.org/info/ping?content-type=application/json}
+\end{center}
+
+\vspace{0.3cm}
+
+The URL has three parts:
+\begin{itemize}
+\item \textbf{Server}: \texttt{rest.ensembl.org}
+\item \textbf{Endpoint}: \texttt{/info/ping}
+\item \textbf{Parameters}: \texttt{content-type=application/json}
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Exercise 1: Implementation}
+
+Use the \pythoninline{http.client} module to connect to the server:
+
+\vspace{0.2cm}
+
+\begin{python}
+import http.client
+import json
+
+SERVER = "rest.ensembl.org"
+ENDPOINT = "/info/ping"
+PARAMS = "?content-type=application/json"
+
+conn = http.client.HTTPSConnection(SERVER)
+conn.request("GET", ENDPOINT + PARAMS)
+
+response = conn.getresponse()
+data = json.loads(response.read().decode())
+
+if data["ping"] == 1:
+    print("ALIVE!")
+\end{python}
+
+\vspace{0.2cm}
+
+Print the \textbf{server name}, \textbf{URL} and the \textbf{status}.
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% SECTION 4: Exercise 2 -- Gene Identification
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Exercise 2: Gene Identification}
+
+\begin{frame}[fragile]
+\frametitle{Exercise 2: Gene Identification Strings}
+
+\textbf{File}: \texttt{P07/e2.py}
+
+\vspace{0.3cm}
+
+Every sequence in Ensembl has a \textbf{stable identifier} (id).
+
+\vspace{0.1cm}
+Example: the \textbf{SRCAP} gene has id \texttt{ENSG00000080603}.
+
+\vspace{0.3cm}
+
+\textbf{Task}: find the stable identifiers for all 10 genes and create a \textbf{dictionary}:
+
+\vspace{0.2cm}
+
+\begin{python}
+genes = {
+    "FRAT1": "ENSG00000165879",
+    "ADA":   "ENSG00000196839",
+    "FXN":   "ENSG00000165060",
+    # ... rest of the genes
+}
+\end{python}
+
+\vspace{0.2cm}
+
+Print all entries: \pythoninline{genes["FRAT1"]} $\rightarrow$ \texttt{ENSG00000165879}
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% SECTION 5: Exercise 3 -- Getting a Remote Gene
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Exercise 3: Getting a Remote Gene}
+
+\begin{frame}
+\frametitle{Exercise 3: Getting a Remote Gene}
+
+\textbf{File}: \texttt{P07/e3.py}
+
+\vspace{0.3cm}
+
+\textbf{Goal}: connect to the \texttt{/sequence/id} endpoint and get the \textbf{sequence} and \textbf{description} of the \textbf{MIR633} gene.
+
+\vspace{0.3cm}
+
+\textbf{Endpoint documentation}:
+\begin{center}
+\small\url{https://rest.ensembl.org/documentation/info/sequence_id}
+\end{center}
+
+\vspace{0.3cm}
+
+The program should print:
+\begin{itemize}
+\item The gene \textbf{description}
+\item The gene \textbf{sequence}
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Exercise 3: Accessing the Endpoint}
+
+\begin{python}
+ENDPOINT = "/sequence/id/"
+GENE_ID = "ENSG00000207552"  # MIR633
+PARAMS = "?content-type=application/json"
+
+conn = http.client.HTTPSConnection(SERVER)
+conn.request("GET",
+    ENDPOINT + GENE_ID + PARAMS)
+
+response = conn.getresponse()
+data = json.loads(response.read().decode())
+
+print("Description:", data["desc"])
+print("Sequence:", data["seq"])
+\end{python}
+
+\vspace{0.2cm}
+
+The response JSON object contains fields like \texttt{desc}, \texttt{seq}, \texttt{id}, etc.
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% SECTION 6: Exercise 4 -- Processing Gene Information
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Exercise 4: Processing Gene Information}
+
+\begin{frame}
+\frametitle{Exercise 4: Processing Gene Information}
+
+\textbf{File}: \texttt{P07/e4.py}
+
+\vspace{0.3cm}
+
+\textbf{Goal}: ask the user for a \textbf{gene name}, retrieve it from the server, and calculate:
+
+\vspace{0.2cm}
+
+\begin{itemize}
+\item Gene \textbf{name} and \textbf{description}
+\item \textbf{Total length} of the sequence
+\item \textbf{Number of bases} (A, C, G, T)
+\item \textbf{Percentage} of each base
+\item The \textbf{most frequent base}
+\end{itemize}
+
+\vspace{0.3cm}
+
+Use the \textbf{Seq Class} from previous assignments for the calculations.
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Exercise 4: Expected Output}
+
+\begin{python}[language={}]
+Enter the gene name: FRAT1
+
+Gene: FRAT1
+Description: FRAT regulator of WNT ...
+Total length: 1801
+A: 432 (24.0%)
+C: 525 (29.2%)
+G: 475 (26.4%)
+T: 369 (20.5%)
+Most frequent base: C
+\end{python}
+
+\vspace{0.2cm}
+
+\textbf{Steps}:
+\begin{enumerate}
+\item Read gene name from the user
+\item Look up its \textbf{stable id} in the dictionary
+\item Connect to the \texttt{/sequence/id} endpoint
+\item Parse the JSON response and perform calculations
+\end{enumerate}
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% SECTION 7: Exercise 5 -- All Genes
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Exercise 5: Information of All Genes}
+
+\begin{frame}
+\frametitle{Exercise 5: Information of All Genes}
+
+\textbf{File}: \texttt{P07/e5.py}
+
+\vspace{0.3cm}
+
+\textbf{Goal}: perform the \textbf{same calculations} as Exercise 4 but for \textbf{all 10 genes} automatically.
+
+\vspace{0.3cm}
+
+\begin{itemize}
+\item Gene names should be obtained from the \textbf{dictionary} (not from the user)
+\item Iterate over all entries and connect to the server for each one
+\item Print the results for \textbf{every gene}
+\end{itemize}
+
+\vspace{0.3cm}
+
+\textbf{Hint}: loop through the dictionary:
+
+\vspace{0.1cm}
+
+\begin{center}
+\pythoninline{for gene_name in genes:}
+\end{center}
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% SECTION 8: Deliverables
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Deliverables}
+
+\begin{frame}
+\frametitle{Deliverables}
+
+\textbf{P07 folder should contain}:
+
+\vspace{0.2cm}
+
+\begingroup\small
+\begin{itemize}
+\item \texttt{e1.py} -- Ping the Ensembl server
+\item \texttt{e2.py} -- Gene identification dictionary
+\item \texttt{e3.py} -- Get remote gene (MIR633)
+\item \texttt{e4.py} -- Process a single gene (user input)
+\item \texttt{e5.py} -- Process all 10 genes
+\end{itemize}
+\endgroup
+
+\vspace{0.3cm}
+
+\textbf{Remember}: Push everything to your remote Github repository!
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% SECTION 9: End
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}
+\begin{center}
+\Huge{Questions?}
+
+\vspace{1cm}
+
+\Large{Time to code!}
+\end{center}
+\end{frame}
+
+\end{document}
